@@ -29,19 +29,30 @@ export default function SignUpScreen() {
                 return;
             }
             setLoading(true);
-            const response = await register({
-                firstName: firstNameRef.current,
-                lastName: lastNameRef.current,
-                email: emailRef.current,
+            const body = {
+                firstname: firstNameRef.current.trim(),
+                lastname: lastNameRef.current.trim(),
+                email: emailRef.current.trim(),
                 password: passwordRef.current,
                 confirm_password: confirmPasswordRef.current,
-              });
-        
+            };
+            const response = await register(body);
+
             // Handle successful sign-up
             console.log('Sign-up successful:', response);
-            // You can navigate to the login screen or perform other actions here
-            navigation.navigate('Login');
+            if (response.message === "Register successfully!") {
+                Alert.alert('Tạo tài khoản thành công', 'Tài khoản đã được tạo!');
+                navigation.navigate('Login');
+            } else {
+                if (response.message === 'Email is already existed!') {
+                    Alert.alert('Email đã tồn tại trên hệ thống');
+                } else {
+                    Alert.alert('Đăng ký không thành công');
+                }
+            }
+
         } catch (error) {
+
             console.error('Sign Up error:', error);
             Alert.alert('Sign Up Error', 'Failed to sign up. Please check your information and try again.');
         }
@@ -50,6 +61,7 @@ export default function SignUpScreen() {
         }
 
     }
+
 
     return (
         <View className="flex-1 bg-white" style={{ backgroundColor: themeColors.bgColor(1) }}>

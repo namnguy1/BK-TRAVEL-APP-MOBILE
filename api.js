@@ -2,8 +2,8 @@
 
 import axios from 'axios';
 
-const ipv4Address = '172.17.24.174'
-const BASE_URL = `http://${ipv4Address}:8080`;
+const ipv4Address = '172.17.30.121'
+export const BASE_URL = `http://${ipv4Address}:8080`;
 
 export const login = async (email, password) => {
   try {
@@ -36,3 +36,26 @@ export const getOnlineTour = async () => {
   }
 
 }
+
+export const getUserById = async (userId, token) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/api/v1/user/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    if (error.response) {
+      console.error('Response data:', error.response.data);
+      console.error('Response status:', error.response.status);
+      console.error('Response headers:', error.response.headers);
+    } else if (error.request) {
+      console.error('Request:', error.request);
+    } else {
+      console.error('Error message:', error.message);
+    }
+  }
+};
+

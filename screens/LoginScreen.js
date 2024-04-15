@@ -1,5 +1,7 @@
 import { View, Text, TouchableOpacity, Image, TextInput, Alert } from 'react-native'
 import React, { useRef, useState } from 'react'
+import { jwtDecode } from "jwt-decode";
+import "core-js/stable/atob"; 
 import { useDispatch } from 'react-redux';
 import { themeColors } from '../theme'
 import { useNavigation } from '@react-navigation/native'
@@ -26,6 +28,8 @@ export default function LoginScreen() {
             const res = await login(email, password);
             console.log(res.data);
             const token = res.data.access_token;
+            const json = jwtDecode(token);
+            console.log(json);
             await AsyncStorage.setItem('token', token);
             dispatch(loginSuccess({ token }));
             navigation.navigate("HomeStack")

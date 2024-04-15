@@ -12,7 +12,6 @@ import OrderCompletion from '../components/OrderCompletion';
 import MapScreen from '../screens/MapScreen';
 import TabGroup from './TabGroup';
 import MessageDetail from '../screens/MessageDetail';
-
 import LocationScreen from '../screens/LocationScreen';
 import UserInformation from '../screens/UserInformation';
 import NotificationScreen from '../screens/NotificationScreen';
@@ -21,11 +20,14 @@ import { useSelector } from 'react-redux';
 const Stack = createNativeStackNavigator();
 import { selectIsAuthenticated, selectUserToken } from '../slices/authSlice';
 import DetailTourScreen2 from '../screens/DetailTourScreen2';
+import PaymentScreen from '../screens/PaymentScreen';
 export default function Navigation() {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const userToken = useSelector(selectUserToken);
-  // console.log(userToken);
+  // console.log('user token: ' + userToken);
+
   return (
+
 
     <NavigationContainer>
       <Stack.Navigator initialRouteName='WelcomeScreen'>
@@ -100,6 +102,10 @@ export default function Navigation() {
           <Stack.Screen
             name="Weather"
             component={WeatherScreen}
+          />
+          <Stack.Screen
+            name="Payment"
+            component={PaymentScreen}
           />
         </Stack.Group>)}
 

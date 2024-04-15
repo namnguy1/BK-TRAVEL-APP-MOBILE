@@ -24,7 +24,6 @@ export default function DetailTourScreen2() {
         }
       };
     const imageList = JSON.parse(item.list_image);
-    console.log(imageList);
     return (
         <View className="flex-1 relative bg-white">
             <View className="absolute z-10 justify-between flex-row px-4 py-4  items-center w-full">
@@ -231,7 +230,7 @@ export default function DetailTourScreen2() {
             </ScrollView >
             <View className="px-4 py-2 w-full h-[100px] absolute bg-white bottom-0 space-y-1 border-t-[0.5px] border-t-indigo-500">
                 <Text className="font-bold text-2xl">
-                    đ 1,439,996
+                   {item.price}
                 </Text>
                 <View className="flex-row items-center justify-between">
                     <TouchableOpacity className="w-[180px] h-[50px] 
@@ -249,7 +248,7 @@ export default function DetailTourScreen2() {
                      bg-[#FF5F73]
                         justify-center rounded-2xl
                         items-center"
-                        onPress={() => navigation.navigate('OrderCustomization')}
+                        onPress={() => navigation.navigate('OrderCustomization',{...item})}
                     >
                         <Text className="text-white font-bold text-[20px] text-center">
                             Đặt ngay

@@ -1,11 +1,19 @@
 import { View, Text, TouchableOpacity, Image, KeyboardAvoidingView, ScrollView, Pressable, TextInput } from 'react-native'
-import React, { useLayoutEffect } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { Entypo } from '@expo/vector-icons'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { themeColors } from '../theme';
 import InformationUserBox from '../components/InformationUserBox';
+import { getUserById } from '../api';
+import { jwtDecode } from "jwt-decode";
+import { useSelector } from 'react-redux';
+import "core-js/stable/atob";
+import { selectUserToken } from '../slices/authSlice';
+
 export default function UserInformation() {
+    const userToken = useSelector(selectUserToken);
+    const [user, setUser] = useState(null);
     const navigation = useNavigation();
     useLayoutEffect(() => {
         return navigation.setOptions({
@@ -29,33 +37,65 @@ export default function UserInformation() {
 
         });
     }, []);
+    useEffect(() => {
+        const fetchUser = async () => {
+            const json = jwtDecode(userToken);
+            const userData = await getUserById(json.user_id, userToken);
+            setUser(userData.user_info);
+
+        };
+        fetchUser();
+    }, [userToken]);
     return (
 
         <View className="flex-1  bg-white">
             <View className="space-y-6 p-4">
 
-                <InformationUserBox
-                    field="Họ của bạn"
-                    data="Đỗ"
-                />
-                <InformationUserBox
-                    field="Tên của bạn"
-                    data="Long"
-                />
-                <InformationUserBox
-                    field="Số điện thoại của bạn"
-                    data="0337533067"
-                />
-                <InformationUserBox
-                    field="Giới tính"
-                    data="Nam"
-                />
+                <View className="flex-row items-center p-2 justify-between border-b-[1px] border-gray-200">
+                    <View className="w-[70%] ">
+                        <Text className="text-lg text-gray-500">Họ</Text>
+                        <TextInput className="text-2xl font-bold">{user?.firstname}</TextInput>
+                    </View>
+                    <TouchableOpacity>
+                        <Text className="text-xl text-[#4a68ff]">Chỉnh sửa</Text>
+                    </TouchableOpacity>
+                </View>
+                <View className="flex-row items-center p-2 justify-between border-b-[1px] border-gray-200">
+                    <View className="w-[70%] ">
+                        <Text className="text-lg text-gray-500">Tên</Text>
+                        <TextInput className="text-2xl font-bold">{user?.lastname}</TextInput>
+                    </View>
+                    <TouchableOpacity>
+                        <Text className="text-xl text-[#4a68ff]">Chỉnh sửa</Text>
+                    </TouchableOpacity>
+                </View>
+                <View className="flex-row items-center p-2 justify-between border-b-[1px] border-gray-200">
+                    <View className="w-[70%] ">
+                        <Text className="text-lg text-gray-500">Số điện thoại</Text>
+                        <TextInput className="text-2xl font-bold">{user?.phone_number}</TextInput>
+                    </View>
+                    <TouchableOpacity>
+                        <Text className="text-xl text-[#4a68ff]">Chỉnh sửa</Text>
+                    </TouchableOpacity>
+                </View>
+                <View className="flex-row items-center p-2 justify-between border-b-[1px] border-gray-200">
+                    <View>
+                        <Text className="text-lg text-gray-500">Giới tính</Text>
+                        <Text className="text-2xl font-bold">{user?.gender}</Text>
+                    </View>
+                    <TouchableOpacity>
+                        <Text className="text-xl text-[#4a68ff]">Chỉnh sửa</Text>
+                    </TouchableOpacity>
+                </View>
+
+
+
                 <View className="flex-row items-center p-2 justify-between border-b-[1px] border-gray-200">
                     <View>
                         <Text className="text-lg text-gray-500">Email</Text>
-                        <Text className="text-2xl font-bold">nam@gmail.com</Text>
+                        <Text className="text-2xl font-bold">{user?.email}</Text>
                     </View>
-                    
+
                 </View>
 
 
