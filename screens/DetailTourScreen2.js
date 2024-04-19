@@ -5,11 +5,13 @@ import { ChevronLeftIcon } from 'react-native-heroicons/outline'
 import { ChevronDownIcon, HeartIcon, ShoppingCartIcon } from 'react-native-heroicons/solid'
 import * as Icon from "react-native-feather";
 import DetailTour from '../components/detailTour';
-import { DetailedTourSchedule } from '../constants'
+import { DetailedTourSchedule, formatCurrency } from '../constants'
 import Accordion from '../components/Accordion'
+import EditPassengerNumberModal from '../components/EditPassengerNumberModal'
 export default function DetailTourScreen2() {
     const { params } = useRoute();
     let item = params;
+
     const navigation = useNavigation();
     const [hasIncreased, setHasIncreased] = useState(false);
     const [isHeartActive, setHeartActive] = useState(false);
@@ -19,10 +21,22 @@ export default function DetailTourScreen2() {
     const [cartQuantity, setCartQuantity] = useState(0);
     const addToCart = () => {
         if (!hasIncreased) {
-          setCartQuantity(cartQuantity + 1);
-          setHasIncreased(true);
+            setCartQuantity(cartQuantity + 1);
+            setHasIncreased(true);
         }
-      };
+    };
+
+    const [status, setStatus] = useState(false);
+    const [adults, setAdults] = useState(1);
+    const [children, setChildren] = useState(0);
+
+    const incrementAdults = () => setAdults(adults + 1);
+    const decrementAdults = () => adults > 1 && setAdults(adults - 1);
+
+    const incrementChildren = () => setChildren(children + 1);
+    const decrementChildren = () => children > 0 && setChildren(children - 1);
+
+
     const imageList = JSON.parse(item.list_image);
     return (
         <View className="flex-1 relative bg-white">
@@ -92,25 +106,37 @@ export default function DetailTourScreen2() {
 
                 </View>
                 <View className="px-4">
-                    <Text className=" py-2 text-2xl font-bold">Điểm nhấn</Text>
+                    <View className="flex-row items-center space-x-2">
+                        <View className="w-2 h-6 bg-[#212460] rounded"></View>
+                        <Text className=" py-2 text-2xl font-bold">Điểm nhấn</Text>
+                    </View>
                     <Text className="">
                         {item.highlight}
                     </Text>
                 </View>
                 <View className="px-4">
-                    <Text className=" py-2 text-2xl font-bold">Chi tiết tour</Text>
+                    <View className="flex-row items-center space-x-2">
+                        <View className="w-2 h-6 bg-[#212460] rounded"></View>
+                        <Text className=" py-2 text-2xl font-bold">Chi tiết tour</Text>
+                    </View>
                     <Text>
                         {item.description}
                     </Text>
                 </View>
                 <View className="px-4">
-                    <Text className=" py-2 text-2xl font-bold">Những điều cần lưu ý</Text>
+                    <View className="flex-row items-center space-x-2">
+                        <View className="w-2 h-6 bg-[#212460] rounded"></View>
+                        <Text className=" py-2 text-2xl font-bold">Những điều cần lưu ý</Text>
+                    </View>
                     <Text>
                         {item.note}
                     </Text>
                 </View>
                 <View className="px-4">
-                    <Text className=" py-2 text-2xl font-bold">Một số hình ảnh về tour</Text>
+                    <View className="flex-row items-center space-x-2">
+                        <View className="w-2 h-6 bg-[#212460] rounded"></View>
+                        <Text className=" py-2 text-2xl font-bold">Một số hình ảnh về tour</Text>
+                    </View>
                     {imageList.map((image, index) => (
 
                         <Image key={index} source={{ uri: image }} style={{
@@ -125,7 +151,10 @@ export default function DetailTourScreen2() {
                 </View>
                 {/* đánh giá */}
                 <View className=" px-4">
-                    <Text className=" py-4 text-2xl font-bold">Đánh giá tour</Text>
+                    <View className="flex-row items-center space-x-2">
+                        <View className="w-2 h-6 bg-[#212460] rounded"></View>
+                        <Text className=" py-2 text-2xl font-bold">Đánh giá tour</Text>
+                    </View>
                     <ScrollView
                         horizontal
                         showsHorizontalScrollIndicator={false}
@@ -229,8 +258,8 @@ export default function DetailTourScreen2() {
 
             </ScrollView >
             <View className="px-4 py-2 w-full h-[100px] absolute bg-white bottom-0 space-y-1 border-t-[0.5px] border-t-indigo-500">
-                <Text className="font-bold text-2xl">
-                   {item.price}
+                <Text className="font-bold text-2xl text-red-500">
+                    {formatCurrency(item.price)} VNĐ
                 </Text>
                 <View className="flex-row items-center justify-between">
                     <TouchableOpacity className="w-[180px] h-[50px] 
@@ -238,7 +267,7 @@ export default function DetailTourScreen2() {
                         justify-center rounded-2xl
                         items-center"
 
-                        onPress={addToCart}
+                        onPress={() => setStatus(true)}
                     >
                         <Text className="text-white font-bold text-[16px] text-center">
                             Thêm vào giỏ hảng
@@ -248,7 +277,7 @@ export default function DetailTourScreen2() {
                      bg-[#FF5F73]
                         justify-center rounded-2xl
                         items-center"
-                        onPress={() => navigation.navigate('OrderCustomization',{...item})}
+                        onPress={() => navigation.navigate('OrderCustomization', { ...item })}
                     >
                         <Text className="text-white font-bold text-[20px] text-center">
                             Đặt ngay
@@ -256,6 +285,19 @@ export default function DetailTourScreen2() {
                     </TouchableOpacity>
                 </View>
             </View>
+            {status &&
+                <EditPassengerNumberModal
+                    tourId={item.tour_id}
+                    setStatus={setStatus}
+                    adults={adults}
+                    children={children}
+                    incrementAdults={incrementAdults}
+                    decrementAdults={decrementAdults}
+                    incrementChildren={incrementChildren}
+                    decrementChildren={decrementChildren}
+                />
+
+            }
         </View>
     )
 }

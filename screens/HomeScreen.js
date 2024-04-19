@@ -22,7 +22,7 @@ export default function HomeScreen() {
     useLayoutEffect(() => {
         navigation.setOptions({ headerShown: false })
     }, [])
-   
+  
 
     return (
         <SafeAreaView className="bg-white mb-[100px] flex-1" >

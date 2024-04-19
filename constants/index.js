@@ -225,3 +225,23 @@ export const weatherImages = {
 }
 
 export const DEFAULT_DISPLAY_DATE_FORMAT = 'DD/MM/YYYY';
+
+
+export function formatCurrency(price) {
+    // Chuyển đổi giá trị số thành chuỗi và làm tròn đến số nguyên gần nhất
+    let roundedPrice = parseFloat(price).toFixed(0);
+
+    // Chuyển đổi giá trị đã làm tròn thành chuỗi
+    let priceString = roundedPrice.toString();
+
+    // Chia chuỗi thành các cụm của 3 số từ phải sang trái
+    let parts = [];
+    while (priceString.length > 3) {
+        parts.unshift(priceString.slice(-3));
+        priceString = priceString.slice(0, -3);
+    }
+    parts.unshift(priceString);
+
+    // Kết hợp các phần cách nhau bằng dấu chấm
+    return parts.join('.');
+}

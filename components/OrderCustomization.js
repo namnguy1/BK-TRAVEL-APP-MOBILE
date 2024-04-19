@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import "core-js/stable/atob";
 import { selectUserToken } from '../slices/authSlice';
 import axios from 'axios'
+import { formatCurrency } from '../constants'
 export default function OrderCustomization() {
     const navigation = useNavigation()
     const { params } = useRoute();
@@ -49,7 +50,8 @@ export default function OrderCustomization() {
                 address_customer: 'TP. Hồ Chí Minh',
 
             };
-            if (body.phone_customer === '') {
+            console.log(body);
+            if (body.phone_customer === null) {
                 Alert.alert('Vui lòng cập nhật số điện thoại của bạn');
                 return;
             }
@@ -59,6 +61,7 @@ export default function OrderCustomization() {
                 user_id: user.user_id,
                 order_id: response.data.order.order_id,
             });
+            console.log(response2.data.link_payment)
             navigation.navigate('Payment', { link_payment: response2.data.link_payment })
             // Linking.openURL(response2.data.link_payment);
             
@@ -156,7 +159,7 @@ export default function OrderCustomization() {
                 </View>
             </View>
             <View className="px-4 py-2 w-full h-[100px] absolute  justify-center  bg-white bottom-0 space-y-1 border-t-[0.5px] border-t-indigo-500">
-                <Text className="font-bold text-2xl">đ {item.price}</Text>
+                <Text className="font-bold text-2xl text-red-500">{formatCurrency(item.price)} VNĐ </Text>
                 <View className="flex-row">
 
                     <TouchableOpacity className="w-full h-[50px] 

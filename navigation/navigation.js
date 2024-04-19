@@ -21,6 +21,7 @@ const Stack = createNativeStackNavigator();
 import { selectIsAuthenticated, selectUserToken } from '../slices/authSlice';
 import DetailTourScreen2 from '../screens/DetailTourScreen2';
 import PaymentScreen from '../screens/PaymentScreen';
+import SuccessScreen from '../screens/SuccessScreen';
 export default function Navigation() {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const userToken = useSelector(selectUserToken);
@@ -106,7 +107,14 @@ export default function Navigation() {
           <Stack.Screen
             name="Payment"
             component={PaymentScreen}
+            options={{ headerShown: false }}
           />
+          <Stack.Screen
+            name="Success"
+            component={SuccessScreen}
+            options={{ headerShown: false }}
+          />
+         
         </Stack.Group>)}
 
 

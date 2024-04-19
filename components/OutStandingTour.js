@@ -5,7 +5,7 @@ import { getOnlineTour } from '../api';
 import * as Icon from "react-native-feather";
 import dayjs from 'dayjs';
 import { useNavigation } from '@react-navigation/native';
-import { DEFAULT_DISPLAY_DATE_FORMAT } from '../constants';
+import { DEFAULT_DISPLAY_DATE_FORMAT, formatCurrency } from '../constants';
 export default function OutStandingTour() {
     const navigation = useNavigation();
     const [onlineTours, setOnlineTours] = useState([]);
@@ -80,7 +80,7 @@ export default function OutStandingTour() {
                                             Hạn đặt chỗ : {dayjs(tour.deadline_book_time).format(DEFAULT_DISPLAY_DATE_FORMAT)}
                                         </Text>
                                     </View>
-                                    <Text className="text-xl font-bold text-center text-red-500">đ {tour.price}</Text>
+                                    <Text className="text-xl font-bold text-center text-red-500">{formatCurrency(tour.price)} VNĐ</Text>
                                 </View>
                             </View>
                         </TouchableWithoutFeedback>

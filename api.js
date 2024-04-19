@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-const ipv4Address = '172.17.30.121'
+const ipv4Address = '172.17.24.162'
 export const BASE_URL = `http://${ipv4Address}:8080`;
 
 export const login = async (email, password) => {
@@ -26,6 +26,7 @@ export const register = async (userData) => {
     throw error;
   }
 };
+
 
 export const getOnlineTour = async () => {
   try {
@@ -58,4 +59,3 @@ export const getUserById = async (userId, token) => {
     }
   }
 };
-
