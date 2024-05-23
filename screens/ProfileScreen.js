@@ -9,6 +9,7 @@ import { ChevronLeftIcon, ChevronDownIcon, HeartIcon, ShoppingCartIcon } from 'r
 const Tab = createMaterialTopTabNavigator();
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutSuccess } from '../slices/authSlice';
+import TopBooking2 from '../components/TopBooking2';
 export default function ProfileScreen() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -68,7 +69,7 @@ export default function ProfileScreen() {
 
       </View>
       <Tab.Navigator>
-        <Tab.Screen name='Đơn hàng của tôi' component={TopBooking} />
+        <Tab.Screen name='Đơn hàng của tôi' component={TopBooking2} />
         <Tab.Screen name='Thông tin' component={TopInfo} />
       </Tab.Navigator>
     </View>

@@ -52,7 +52,7 @@ const TabButton = (props) => {
 
 export default function TabGroup() {
   return (
-    <SafeAreaView style={{ flex: 1, }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor:'white'}}>
       <Tab.Navigator
         screenOptions={{
           headerShown: false,
@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 60,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    borderRadius: 100,
   }
 })

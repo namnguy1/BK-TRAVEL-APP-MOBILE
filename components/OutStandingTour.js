@@ -13,7 +13,7 @@ export default function OutStandingTour() {
         try {
             const response = await getOnlineTour();
             if (response) {
-                setOnlineTours(response.tours);
+                setOnlineTours(response.data);
             }
         } catch (error) {
             console.error(error);
@@ -33,7 +33,7 @@ export default function OutStandingTour() {
                     </Text>
                 </View>
 
-                <TouchableOpacity>
+                <TouchableOpacity onPress={()=>{navigation.navigate('OrderUser')}}>
                     <Text style={{ color: themeColors.text }} className="font-semibold">Xem thêm</Text>
                 </TouchableOpacity>
             </View>
@@ -52,8 +52,8 @@ export default function OutStandingTour() {
                         <TouchableWithoutFeedback
                             key={index}
                             onPress={() => {
-                                navigation.navigate('DetailTour2', {...tour})
-                              }}
+                                navigation.navigate('DetailTour2', { ...tour })
+                            }}
                         >
                             <View style={{ shadowColor: themeColors.bgColor(0.2), shadowRadius: 7 }} className="mr-6 bg-white rounded-3xl shadow-lg">
                                 <Image className="h-36 w-64 rounded-t-3xl"
@@ -62,7 +62,9 @@ export default function OutStandingTour() {
 
                                 <View className=" pb-4 space-y-2">
 
-                                    <Text className="text-lg font-bold pt-2">{tour.name}</Text>
+                                    <Text className="text-lg font-bold pt-2">
+                                        {tour.name.length > 30 ? `${tour.name.substring(0, 28)}...` : tour.name}
+                                    </Text>
 
                                     <View className="flex-row items-center space-x-1">
                                         <Icon.MapPin color="gray" width={15} height={15} />

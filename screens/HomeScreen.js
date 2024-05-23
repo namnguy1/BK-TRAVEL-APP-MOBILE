@@ -75,8 +75,10 @@ export default function HomeScreen() {
                     }
                 </View> */}
                 <OutStandingTour/>
+               
                 <FamousLocation />
-                <MoreTour />
+                <MoreTour/>
+               
             </ScrollView>
 
 

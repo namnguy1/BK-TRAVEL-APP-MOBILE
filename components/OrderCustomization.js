@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, TextInput, Alert, Linking } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { themeColors } from '../theme'
 import * as Icon from 'react-native-feather'
 import { useNavigation, useRoute } from '@react-navigation/native'
@@ -12,12 +12,16 @@ import "core-js/stable/atob";
 import { selectUserToken } from '../slices/authSlice';
 import axios from 'axios'
 import { formatCurrency } from '../constants'
+import TableVoucher from './TableVoucher'
+import Toast from 'react-native-toast-message';
 export default function OrderCustomization() {
     const navigation = useNavigation()
     const { params } = useRoute();
     let item = params;
+    console.log('item:', item)
     const [adults, setAdults] = useState(1);
     const [children, setChildren] = useState(0);
+    const [voucherCode, setVoucherCode] = useState(""); // State for voucher code
 
     const incrementAdults = () => setAdults(adults + 1);
     const decrementAdults = () => adults > 1 && setAdults(adults - 1);
@@ -26,49 +30,91 @@ export default function OrderCustomization() {
     const decrementChildren = () => children > 0 && setChildren(children - 1);
 
     const [user, setUser] = useState(null);
+    const [orderID, setOrderID] = useState(null);
     const userToken = useSelector(selectUserToken);
     useEffect(() => {
         const fetchUser = async () => {
             const json = jwtDecode(userToken);
             const userData = await getUserById(json.user_id, userToken);
             setUser(userData.user_info);
-
         };
         fetchUser();
     }, [userToken]);
-
+    const [isReload, setIsReload] = useState(false);
 
     const handleCreateOrder = async () => {
         try {
-            const body = {
-                user_id: user.user_id,
-                adult_quantity: adults,
-                children_quantity: children,
-                tour_id: item.tour_id,
-                name_customer: user?.firstname + ' ' + user?.lastname,
-                phone_customer: user?.phone_number,
-                address_customer: 'TP. Hồ Chí Minh',
+            // console.log('tour id:', item.tour_id);
+            // const body = {
+            //     user_id: user.user_id,
+            //     adult_quantity: adults,
+            //     child_quantity: children,
+            //     tour_id: item.tour_id,
+            //     name_customer: user?.firstname + ' ' + user?.lastname,
+            //     phone_customer: user?.phone_number,
+            //     address_customer: 'TP. Hồ Chí Minh',
+            // };
 
-            };
-            console.log(body);
-            if (body.phone_customer === null) {
-                Alert.alert('Vui lòng cập nhật số điện thoại của bạn');
-                return;
-            }
-            const response = await axios.post(`${BASE_URL}/api/v1/order`, body);
-            console.log(response.data.order.order_id)
-            const response2 = await axios.post(`${BASE_URL}/api/v1/order/payment`, {
+            // if (body.phone_customer === null) {
+            //     Alert.alert('Vui lòng cập nhật số điện thoại của bạn');
+            //     return;
+            // }
+            // const response = await axios.post(`${BASE_URL}/api/v1/orders`, body, {
+            //     headers: {
+            //         Authorization: `${userToken}`,
+            //     },
+            // });
+            // console.log('order:',response.data.order.order_id)
+            const response2 = await axios.post(`${BASE_URL}/api/v1/orders/payments`, {
                 user_id: user.user_id,
-                order_id: response.data.order.order_id,
+                order_id: item.orderId,
+            }, {
+                headers: {
+                    Authorization: `${userToken}`,
+                },
             });
-            console.log(response2.data.link_payment)
+            console.log(response2)
             navigation.navigate('Payment', { link_payment: response2.data.link_payment })
             // Linking.openURL(response2.data.link_payment);
-            
+
         } catch (error) {
             console.error(error);
         }
     }
+    // Function to handle voucher code usage
+    // console.log('order ID :', orderID);
+    const handleUseVoucher = async () => {
+        try {
+            const requestBody = {
+                order_id: item.orderId,
+                listVoucherCodes: [voucherCode],
+            };
+            console.log('body ',requestBody);
+            const response = await axios.post(`${BASE_URL}/api/v1/orders/vouchers`, requestBody, {
+                headers: {
+                    Authorization: `${userToken}`,
+                },
+            });
+            console.log('response:', response.data)
+            if (response?.status === 200) {
+                setIsReload(prev => !prev);
+                Toast.show({
+                    type: 'success',
+                    text1: 'Cập nhập thông tin thành công',
+                    text2: 'Thông tin của bạn đã được cập nhập👋'
+                });
+            } else {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Cập nhập thông tin không thành công',
+                    text2: 'Vui lòng thử lại sau👋'
+                });
+            }
+        } catch (error) {
+            console.log('error: ', error);
+            console.error(error);
+        }
+    };
   
     return (
         <View className="flex-1 bg-white">
@@ -98,20 +144,7 @@ export default function OrderCustomization() {
                     <Text className="text-gray-500">Hoàn hủy miễn phí trong 24h</Text>
                 </View>
             </View>
-            <View className="px-4 mt-4 space-y-2">
-                <Text className="text-xl text-gray-700 font-semibold">Vui lòng nhập mã ưu đãi của bạn</Text>
-                <View className="w-full h-12 flex-row px-4 " style={{ borderWidth: 1, borderColor: 'lightgray' }}>
-                    <TextInput
-                        className="w-[80%]  bg-white"
-                        placeholder='Nhập mã ưu đãi của bạn'
-                        placeholderTextColor='gray'
 
-                    />
-                    <TouchableOpacity className="w-[25%] items-center justify-center" style={{ backgroundColor: themeColors.bgColor(1) }}>
-                        <Text className="text-white font-bold">Sử dụng</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
             <View className="px-4 mt-4">
                 <View
                     style={{
@@ -158,6 +191,26 @@ export default function OrderCustomization() {
                     </View>
                 </View>
             </View>
+            <View className="px-4 mt-4 space-y-2">
+                <Text className="text-xl text-gray-700 font-semibold">Vui lòng nhập mã ưu đãi của bạn</Text>
+                <View className="w-full h-12 flex-row px-4 " style={{ borderWidth: 1, borderColor: 'lightgray' }}>
+                    <TextInput
+                        className="w-[80%]  bg-white"
+                        placeholder='Nhập mã ưu đãi của bạn'
+                        placeholderTextColor='gray'
+                        value={voucherCode}
+                        onChangeText={setVoucherCode}
+                    />
+                    <TouchableOpacity
+                        onPress={handleUseVoucher}
+                        className="w-[25%] items-center justify-center"
+                        style={{ backgroundColor: themeColors.bgColor(1) }}
+                    >
+                        <Text className="text-white font-bold">Sử dụng</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <TableVoucher orderId ={item.orderId} token = {userToken} isReload={isReload} setIsReload={setIsReload}/>
             <View className="px-4 py-2 w-full h-[100px] absolute  justify-center  bg-white bottom-0 space-y-1 border-t-[0.5px] border-t-indigo-500">
                 <Text className="font-bold text-2xl text-red-500">{formatCurrency(item.price)} VNĐ </Text>
                 <View className="flex-row">

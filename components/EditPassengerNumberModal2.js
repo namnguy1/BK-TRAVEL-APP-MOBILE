@@ -9,13 +9,14 @@ import { selectUserToken } from '../slices/authSlice';
 import { BASE_URL, getUserById } from '../api';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
+import { useNavigation } from '@react-navigation/native';
 
 
 
-const EditPassengerNumberModal = (
+const EditPassengerNumberModal2 = (
     {
         tourId,
-        setStatus
+        setStatus2
         , adults,
         children,
         incrementAdults,
@@ -23,7 +24,9 @@ const EditPassengerNumberModal = (
         incrementChildren,
         decrementChildren,
         reload,
-        setReload
+        setReload,
+        name,
+        price
     }) => {
     // lấy dữ liệu người dùng 
     const userToken = useSelector(selectUserToken);
@@ -36,6 +39,7 @@ const EditPassengerNumberModal = (
         };
         fetchUser();
     }, [userToken]);
+    const navigation = useNavigation();
     const slide = React.useRef(new Animated.Value(300)).current;
 
 
@@ -67,38 +71,41 @@ const EditPassengerNumberModal = (
         slideDown();
 
         setTimeout(() => {
-            setStatus(false);
+            setStatus2(false);
         }, 800)
 
     }
-    const handleAddtoCart = async () => {
+    const handleCreateOrder = async () => {
         try {
             const body = {
                 user_id: user.user_id,
-                tour: {
-                    tour_id: tourId,
-                    adult_quantity: adults,
-                    child_quantity: children,
-                },
+                adult_quantity: adults,
+                child_quantity: children,
+                tour_id: tourId,
+                name_customer: user?.firstname + ' ' + user?.lastname,
+                phone_customer: user?.phone_number,
+                address_customer: 'TP. Hồ Chí Minh',
             };
-            const response = await axios.post(`${BASE_URL}/api/v1/users/carts`, body, {
+            console.log('body:', body);
+            if (body.phone_customer === null) {
+                Alert.alert('Vui lòng cập nhật số điện thoại của bạn');
+                return;
+            }
+            const response = await axios.post(`${BASE_URL}/api/v1/orders`, body, {
                 headers: {
                     Authorization: `${userToken}`,
                 },
             });
-            if (response?.status === 200) {
-                setReload(!reload);
-                Toast.show({
-                    type: 'success',
-                    text1: 'Thêm vào giỏ hàng thành công',
-                    text2: 'Tour đã được thêm vào giỏ hàng của bạn👋'
-                });
-            } else {
-                Toast.show({
-                    type: 'error',
-                    text1: 'Thêm vào giỏ hàng không thành công',
-                    text2: 'Vui lòng thử lại sau👋'
-                });
+            // console.log('the loai cua order:',typeof response.data.order.order_id);
+            if (response.status === 200) {
+                navigation.navigate('OrderCustomization',
+                    {
+                        orderId: response.data.order.order_id,
+                        tourId: tourId,
+                        name: name,
+                        price: price,
+                    }
+                );
             }
         } catch (error) {
             console.error(error);
@@ -113,7 +120,7 @@ const EditPassengerNumberModal = (
                     <View className="flex-row justify-between items-center">
                         <Text style={{ fontSize: 20, fontWeight: 'bold', }}>Số lượng hành khách</Text>
                         <TouchableOpacity
-                            onPress={() => setStatus(false)}
+                            onPress={() => setStatus2(false)}
                         >
                             <XMarkIcon size="25" strokeWidth={3} color="black" />
                         </TouchableOpacity>
@@ -165,15 +172,15 @@ const EditPassengerNumberModal = (
 
                     </View>
                     <TouchableOpacity
-                        style={{ backgroundColor: themeColors.bgColor(1) }}
-                        className="w-full h-[50px] 
+
+                        className="w-full h-[50px] bg-red-500
                         justify-center rounded-2xl
                         absolute bottom-2 right-5"
-                        onPress={handleAddtoCart}
+                        onPress={handleCreateOrder}
 
                     >
                         <Text className="text-white font-bold text-[20px] text-center">
-                            Thêm vào giỏ hàng
+                            Đặt ngay
                         </Text>
                     </TouchableOpacity>
                 </Animated.View>
@@ -184,7 +191,7 @@ const EditPassengerNumberModal = (
 }
 
 
-export default EditPassengerNumberModal;
+export default EditPassengerNumberModal2;
 
 
 const styles = StyleSheet.create({

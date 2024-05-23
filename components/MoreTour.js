@@ -4,6 +4,7 @@ import { themeColors } from '../theme';
 import * as Icon from "react-native-feather";
 import { mealData, moreTour } from '../constants'
 import MasonryList from '@react-native-seoul/masonry-list';
+
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 export default function MoreTour() {
   const [selectedButton, setSelectedButton] = useState('Đề xuất');
@@ -30,23 +31,21 @@ export default function MoreTour() {
         <TouchableOpacity onPress={() => handleButtonPress('Không nên bỏ lỡ')}>
           <Text style={{ color: selectedButton === 'Không nên bỏ lỡ' ? '#fc3d03' : 'black', borderBottomWidth: selectedButton === 'Không nên bỏ lỡ' ? 2 : 0, borderColor: '#fc3d03', paddingBottom: 2 }}>Không nên bỏ lỡ</Text>
         </TouchableOpacity>
-
-
-
       </ScrollView>
-      <View className="mx-4 mt-4">
-        <MasonryList
-          data={mealData}
-          keyExtractor={(item) => item.id}
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item, i }) => <RecipeCard item={item} index={i} />}
-          // refreshing={isLoadingNext}
-          // onRefresh={() => refetch({first: ITEM_CNT})}
-          onEndReachedThreshold={0.1}
-        // onEndReached={() => loadNext(ITEM_CNT)}
-        />
-      </View>
+      {/* <View className="mx-4 mt-4"> */}
+      <MasonryList
+        data={mealData}
+        contentContainerStyle={{ marginHorizontal: 10, marginTop:10 }}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item, i }) => <RecipeCard item={item} index={i} />}
+      // refreshing={isLoadingNext}
+      // onRefresh={() => refetch({first: ITEM_CNT})}
+      // onEndReachedThreshold={0.1}
+      // onEndReached={() => loadNext(ITEM_CNT)}
+      />
+      {/* </View> */}
     </View>
   );
 }
@@ -55,18 +54,18 @@ const RecipeCard = ({ item, index }) => {
 
 
   return (
-    <View>
+    <View className="">
       <Pressable
         style={{ width: '100%', paddingLeft: isEven ? 0 : 8, paddingRight: isEven ? 8 : 0 }}
         className="flex justify-center mb-4 space-y-1 "
-        onPress={() => {}}
+        onPress={() => { }}
       >
         <Image
           source={{ uri: item.image }}
           style={{ width: '100%', height: index % 3 === 0 ? hp(25) : hp(35), borderRadius: 20 }}
           className="bg-black/5"
         />
-        
+
         <View style={{ bottom: 40 }} className="absolute left-3 flex-row items-center justify-center">
           <Icon.MapPin height="20" width="20" stroke="white" />
           <Text className="text-lg text-white font-bold ml-2">TP Hồ Chí Minh</Text>

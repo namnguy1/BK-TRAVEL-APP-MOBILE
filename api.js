@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-const ipv4Address = '172.17.24.162'
+const ipv4Address = '172.17.28.122'
 export const BASE_URL = `http://${ipv4Address}:8080`;
 
 export const login = async (email, password) => {
@@ -30,7 +30,8 @@ export const register = async (userData) => {
 
 export const getOnlineTour = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/api/v1/tour/all/online`)
+    const response = await axios.get(`${BASE_URL}/api/v1/tours/all/online`)
+    console.log('data: ', response.data);
     return response.data;
   } catch (error) {
     throw error;
@@ -40,9 +41,9 @@ export const getOnlineTour = async () => {
 
 export const getUserById = async (userId, token) => {
   try {
-    const response = await axios.get(`${BASE_URL}/api/v1/user/${userId}`, {
+    const response = await axios.get(`${BASE_URL}/api/v1/users/${userId}`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `${token}`,
       },
     });
     return response.data;

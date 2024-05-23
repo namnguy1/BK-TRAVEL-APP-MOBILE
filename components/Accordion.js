@@ -10,19 +10,26 @@ import {
 } from 'react-native';
 import React, { useState } from 'react';
 import { AntDesign } from '@expo/vector-icons';
-import { ChevronLeftIcon, ChevronDownIcon } from 'react-native-heroicons/solid'
+import { ChevronLeftIcon, ChevronDownIcon, ClockIcon, ArrowRightCircleIcon } from 'react-native-heroicons/solid'
 import { HeartIcon, MinusIcon, PlusIcon, ShoppingCartIcon } from 'react-native-heroicons/outline'
 
 export default function Accordion({
-
     day,
-    start,
-    end,
-    numberOfMeals,
+    name,
+    date,
+    note,
+    range_time,
     description,
 }) {
     const [opened, setOpened] = useState(false);
+    const extractDayNumber = (dayString) => {
+        const match = dayString.match(/\d+/);
+        return match ? parseInt(match[0]) : null;
+    };
+  
 
+    // Convert 'day' prop to numeric format
+    const dayNumber = extractDayNumber(day);
     if (
         Platform.OS === 'android' &&
         UIManager.setLayoutAnimationEnabledExperimental
@@ -57,19 +64,18 @@ export default function Accordion({
 
 
         <View>
-            <View className="flex-row space-x-4 space-y-2">
+            <View className="flex-row items-center justify-between space-y-2">
                 <View className="flex-row items-center space-x-1">
                     <Text className="text-[16px] font-semibold">Ngày</Text>
                     <View className="rounded-full items-center justify-center bg-gray-400 w-[25] h-[25]">
-                        <Text>{day}</Text>
+                        <Text className="">{dayNumber}</Text>
                     </View>
                 </View>
                 <View>
-                    <Text className="font-semibold">{start} - {end}</Text>
-                    <Text className="font-semibold">Số bữa ăn: {numberOfMeals} bữa</Text>
+                    <Text className="font-semibold text-xl">{name}</Text>
                 </View>
                 <View className="flex-row items-center space-x-1">
-                    <Text>18/02/2024</Text>
+                    <Text>{date}</Text>
                     <TouchableOpacity
                         onPress={toggleAccordion}
                     >
@@ -80,8 +86,19 @@ export default function Accordion({
 
             </View>
             {opened && (
-                <View style={[styles.content]}>
-                    <Text style={styles.details}>{description}</Text>
+                <View className="mt-2 p-2 space-y-1 bg-gray-100 rounded-xl">
+                    <View className="flex-row items-center space-x-4">
+                        <ClockIcon size="30" stroke={50} color="#FFEA00" />
+                        <Text className="flex-1 text-[16px] font-semibold">{range_time} :{name}</Text>
+                    </View>
+                    <View className="flex-row items-center space-x-4">
+                        <ArrowRightCircleIcon size="30" stroke={50} color="red" />
+                        <Text className="flex-1 text-[16px] font-semibold">{description}</Text>
+                    </View>
+                    <View className="flex-row  space-x-4">
+                        <Text className="font-semibold text-lg ">*Lưu ý:</Text>
+                        <Text className="flex-1 text-[16px]"> {note}</Text>
+                    </View>
                 </View>
             )}
 

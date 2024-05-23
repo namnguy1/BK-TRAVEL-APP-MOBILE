@@ -22,6 +22,8 @@ import { selectIsAuthenticated, selectUserToken } from '../slices/authSlice';
 import DetailTourScreen2 from '../screens/DetailTourScreen2';
 import PaymentScreen from '../screens/PaymentScreen';
 import SuccessScreen from '../screens/SuccessScreen';
+import OrderUserScreen from '../screens/OrderUserScreen';
+import SearchingTourResult from '../screens/SearchingTourResult';
 export default function Navigation() {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const userToken = useSelector(selectUserToken);
@@ -67,6 +69,10 @@ export default function Navigation() {
             component={SearchingTour}
             options={{ headerShown: false }}
           />
+           <Stack.Screen name="SearchTourResult"
+            component={SearchingTourResult}
+        
+          />
           <Stack.Screen
             name="OrderCustomization"
             component={OrderCustomization}
@@ -78,6 +84,11 @@ export default function Navigation() {
             options={{ headerShown: false }}
           />
           <Stack.Screen
+            name="OrderUser"
+            component={OrderUserScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
             name="MapScreen"
             component={MapScreen}
             options={{ headerShown: false }}
@@ -85,6 +96,7 @@ export default function Navigation() {
           <Stack.Screen
             name="MessageDetail"
             component={MessageDetail}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="LocationScreen"

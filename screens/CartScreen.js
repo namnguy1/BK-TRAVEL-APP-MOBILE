@@ -1,18 +1,66 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import CheckBox from '../components/CheckBox';
 import { ChevronLeftIcon, ChevronDownIcon } from 'react-native-heroicons/solid'
 import { HeartIcon, MinusIcon, PlusIcon, ShoppingCartIcon, TrashIcon, PencilSquareIcon } from 'react-native-heroicons/outline'
-import { useNavigation } from '@react-navigation/native';
-import { IntroduceImage } from '../constants';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { IntroduceImage, formatCurrency } from '../constants';
+import { BASE_URL, getUserById } from '../api';
+import { jwtDecode } from "jwt-decode";
+import { useSelector } from 'react-redux';
+import "core-js/stable/atob";
+import { selectUserToken } from '../slices/authSlice';
+import axios from 'axios';
+import ProductItem from '../components/ProductItem';
+import NoItemInCard from '../components/NoItemInCard';
 export default function CartScreen() {
 
-    const navigation = useNavigation()
-    const [isActive, setIsActive] = useState(true);
+    // lấy dữ liệu người dùng
+    const userToken = useSelector(selectUserToken);
+    const json = jwtDecode(userToken);
+    const userId = json.user_id;
 
-    const handleCheckboxToggle = (newState) => {
-        setIsActive(newState);
+    const [cartList, setCartList] = useState([]);
+    const [selectedTour, setSelectedTour] = useState([]);
+    const [reload, setReload] = useState(false);
+
+    const [reloadList, setReloadList] = useState(false);
+    const toggleReloadList = () => setReloadList(!reloadList);
+
+    const navigation = useNavigation();
+    const getCartList = useCallback(async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}/api/v1/users/${userId}/cart`, {
+                headers: {
+                    Authorization: `${userToken}`,
+                },
+            });
+            console.log('response; ',response);
+            if (response?.status === 200) {
+                setCartList(response.data.data);
+            }
+        } catch (error) {
+            console.error('Error fetching cartss:', error);
+        }
+    }, [userId])
+    const totalPrice = () => {
+        if (!cartList?.cart?.order_items) return 0;
+        return cartList.cart.order_items.reduce((total, item) => {
+            if (selectedTour.includes(item.tour_id)) {
+                return total + parseInt(item.total_price);
+            }
+            return total;
+        }, 0);
     };
+
+
+    useEffect(() => {
+        getCartList();
+
+    }, [getCartList, reload]);
+
+
+
 
     return (
         <View className="flex-1 relative bg-white">
@@ -29,46 +77,57 @@ export default function CartScreen() {
                     </TouchableOpacity>
                     <Text className="text-[16px] font-bold">Giỏ hàng</Text>
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={toggleReloadList}>
                     <Text className="text-[16px] font-bold">Bỏ chọn tất cả</Text>
                 </TouchableOpacity>
             </View>
-            <View className="px-8 mt-[100px] flex-row space-x-3">
-                <CheckBox />
-                <Image
-                    source={IntroduceImage[0]}
-                    style={{
-                        width: 100,
-                        height: 100,
-                        borderRadius: 20,
-                    }}
-                />
-                <View className="flex-1 ">
-                    <Text className="font-bold text-lg">
-                        2N1D Mui Ne - Phan thiet Tour from Ho Chi Minh with Day tour option
-                    </Text>
-                    <View className="flex-row items-center justify-between mt-2">
-                        <Text className="font-bold text-lg text-red-600">đ 3,777,000</Text>
-                        <View className="flex-row items-center justify-center space-x-2">
-                            <TouchableOpacity>
-                                <TrashIcon size="23" color="black" />
-                            </TouchableOpacity>
-                            <TouchableOpacity>
-                                <PencilSquareIcon size="23" color="black" />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
+            {cartList?.cart?.order_items.length === 0
 
-            </View>
+                ? (
+                    <NoItemInCard />
+                ) : (
+                    <View className="mt-[100px] space-y-8">
+                        {cartList?.cart?.order_items.map(order => (
+
+                            <View
+                                key={order.id}
+                            >
+
+                                <ProductItem
+                                    userId={userId}
+                                    userToken={userToken}
+                                    tourId={order.tour_id}
+                                    cartId={order.cart_id}
+                                    adultQuantity={
+                                        order.adult_quantity
+                                    }
+                                    childQuantity={
+                                        order.child_quantity
+                                    }
+                                    totalPrice={order.total_price}
+                                    reload={reload}
+                                    setReload={setReload}
+                                    selectedTour={selectedTour}
+                                    setSelectedTour={setSelectedTour}
+                                    reloadList={reloadList}
+                                    setReloadList={setReloadList}
+
+                                />
+                            </View>
+                        ))}
+
+                    </View>
+                )
+            }
+
             <View className="px-4 py-4 w-full h-[100px] absolute bg-white bottom-0 space-y-1 border-t-[0.5px] border-t-indigo-500">
 
                 <View className="flex-row items-center justify-between">
                     <View>
                         <Text className="text-gray-500 text-xl">
-                            Tổng cộng (0 đơn vị)
+                            Tổng cộng ({selectedTour.length} đơn vị)
                         </Text>
-                        <Text className="font-bold text-2xl">đ 0</Text>
+                        <Text className="font-bold text-2xl text-red-500">{formatCurrency(totalPrice())} VNĐ</Text>
                     </View>
 
                     <TouchableOpacity className="w-[180px] h-[50px] 

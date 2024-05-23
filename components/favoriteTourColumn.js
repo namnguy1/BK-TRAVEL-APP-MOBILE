@@ -7,7 +7,7 @@ import { themeColors } from '../theme'
 import DetailTourCard from './resturantCard'
 import FavoriteTourCard from './favoriteTourCard';
 
-export default function FavoriteTourColumn({ title, description, locations }) {
+export default function FavoriteTourColumn({ title, locations }) {
 
   // const [resturants, setResturants] = useState([]);
 
