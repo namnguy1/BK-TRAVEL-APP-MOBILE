@@ -91,7 +91,7 @@ export default function DetailTourScreen2() {
                     Authorization: `${userToken}`,
                 },
             });
-            // console.log('response', response.data);
+            // console.log('response11', response.data.data[0].tours);
             if (response?.status === 200) {
                 const tempLoveList = response.data.data[0].tours.map(
                     (item) => item.tour_id

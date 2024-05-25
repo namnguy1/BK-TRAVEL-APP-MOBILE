@@ -33,7 +33,7 @@ export default function FavoriteTour() {
           Authorization: `${userToken}`,
         },
       });
-      if (response?.status === 200) {
+      if (response?.status === 200 && response?.data?.data[0]?.tours) {
         setWishListTours(response.data.data[0].tours);
       }
       console.log('wishlist tours:', wishListTours);
