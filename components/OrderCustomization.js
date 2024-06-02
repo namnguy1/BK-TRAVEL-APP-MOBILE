@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, TextInput, Alert, Linking } from 'react-native'
+import { View, Text, TouchableOpacity, TextInput, Alert, Linking, ScrollView } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { themeColors } from '../theme'
 import * as Icon from 'react-native-feather'
@@ -89,7 +89,7 @@ export default function OrderCustomization() {
                 order_id: item.orderId,
                 listVoucherCodes: [voucherCode],
             };
-            console.log('body ',requestBody);
+            console.log('body ', requestBody);
             const response = await axios.post(`${BASE_URL}/api/v1/orders/vouchers`, requestBody, {
                 headers: {
                     Authorization: `${userToken}`,
@@ -115,7 +115,7 @@ export default function OrderCustomization() {
             console.error(error);
         }
     };
-  
+
     return (
         <View className="flex-1 bg-white">
             <View className="relative py-4 shadow-xm">
@@ -132,85 +132,88 @@ export default function OrderCustomization() {
                     </Text>
                 </View>
             </View>
-            <View className="px-4 mt-2">
-                <View className="flex-row w-full justify-between">
-                    <Text className="text-center text-[16px] font-bold w-[50%]">{item.name}</Text>
-                    <TouchableOpacity className="flex-row space-x-2">
-                        <Text className="underline text-[16px]">Chi tiết</Text>
-                        <Icon.ArrowRightCircle strokeWidth={1} stroke="black" />
-                    </TouchableOpacity>
+            <ScrollView>
+                <View className="px-4 mt-2">
+                    <View className="flex-row w-full justify-between">
+                        <Text className="text-center text-[16px] font-bold w-[50%]">{item.name}</Text>
+                        <TouchableOpacity className="flex-row space-x-2">
+                            <Text className="underline text-[16px]">Chi tiết</Text>
+                            <Icon.ArrowRightCircle strokeWidth={1} stroke="black" />
+                        </TouchableOpacity>
+                    </View>
+                    <View className="bg-gray-300 w-[190px] p-1 mt-2">
+                        <Text className="text-gray-500">Hoàn hủy miễn phí trong 24h</Text>
+                    </View>
                 </View>
-                <View className="bg-gray-300 w-[190px] p-1 mt-2">
-                    <Text className="text-gray-500">Hoàn hủy miễn phí trong 24h</Text>
-                </View>
-            </View>
 
-            <View className="px-4 mt-4">
-                <View
-                    style={{
-                        borderWidth: 1,
-                        borderColor: '#ccd9cf',
-                    }}
-                    className="p-3 w-full  rounded-2xl space-y-4"
-                >
-                    <View className="flex-row items-center justify-between">
-                        <Text className="font-bold text-xl ">Người lớn</Text>
-                        <View className="flex-row space-x-6">
-                            <TouchableOpacity
-                                className="rounded-full bg-gray-200 w-[30px] h-[30px] items-center justify-center"
-                                onPress={decrementAdults}
-                            >
-                                <Text className="font-bold text-2xl ">-</Text>
-                            </TouchableOpacity>
-                            <Text className="text-gray-500 text-2xl ">{adults}</Text>
-                            <TouchableOpacity
-                                className="rounded-full bg-gray-200 w-[30px] h-[30px] items-center justify-center"
-                                onPress={incrementAdults}
-                            >
-                                <Text className="font-bold text-2xl ">+</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View className="flex-row items-center justify-between">
-                        <Text className="font-bold text-xl ">Trẻ em (5-9)</Text>
-                        <View className="flex-row space-x-6">
-                            <TouchableOpacity
-                                className="rounded-full bg-gray-200 w-[30px] h-[30px] items-center justify-center"
-                                onPress={decrementChildren}
-                            >
-                                <Text className="font-bold text-2xl ">-</Text>
-                            </TouchableOpacity>
-                            <Text className="text-gray-500 text-2xl ">{children}</Text>
-                            <TouchableOpacity
-                                className="rounded-full bg-gray-200 w-[30px] h-[30px] items-center justify-center"
-                                onPress={incrementChildren}
-                            >
-                                <Text className="font-bold text-2xl ">+</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-            </View>
-            <View className="px-4 mt-4 space-y-2">
-                <Text className="text-xl text-gray-700 font-semibold">Vui lòng nhập mã ưu đãi của bạn</Text>
-                <View className="w-full h-12 flex-row px-4 " style={{ borderWidth: 1, borderColor: 'lightgray' }}>
-                    <TextInput
-                        className="w-[80%]  bg-white"
-                        placeholder='Nhập mã ưu đãi của bạn'
-                        placeholderTextColor='gray'
-                        value={voucherCode}
-                        onChangeText={setVoucherCode}
-                    />
-                    <TouchableOpacity
-                        onPress={handleUseVoucher}
-                        className="w-[25%] items-center justify-center"
-                        style={{ backgroundColor: themeColors.bgColor(1) }}
+                <View className="px-4 mt-4">
+                    <View
+                        style={{
+                            borderWidth: 1,
+                            borderColor: '#ccd9cf',
+                        }}
+                        className="p-3 w-full  rounded-2xl space-y-4"
                     >
-                        <Text className="text-white font-bold">Sử dụng</Text>
-                    </TouchableOpacity>
+                        <View className="flex-row items-center justify-between">
+                            <Text className="font-bold text-xl ">Người lớn</Text>
+                            <View className="flex-row space-x-6">
+                                <TouchableOpacity
+                                    className="rounded-full bg-gray-200 w-[30px] h-[30px] items-center justify-center"
+                                    onPress={decrementAdults}
+                                >
+                                    <Text className="font-bold text-2xl ">-</Text>
+                                </TouchableOpacity>
+                                <Text className="text-gray-500 text-2xl ">{adults}</Text>
+                                <TouchableOpacity
+                                    className="rounded-full bg-gray-200 w-[30px] h-[30px] items-center justify-center"
+                                    onPress={incrementAdults}
+                                >
+                                    <Text className="font-bold text-2xl ">+</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <View className="flex-row items-center justify-between">
+                            <Text className="font-bold text-xl ">Trẻ em (5-9)</Text>
+                            <View className="flex-row space-x-6">
+                                <TouchableOpacity
+                                    className="rounded-full bg-gray-200 w-[30px] h-[30px] items-center justify-center"
+                                    onPress={decrementChildren}
+                                >
+                                    <Text className="font-bold text-2xl ">-</Text>
+                                </TouchableOpacity>
+                                <Text className="text-gray-500 text-2xl ">{children}</Text>
+                                <TouchableOpacity
+                                    className="rounded-full bg-gray-200 w-[30px] h-[30px] items-center justify-center"
+                                    onPress={incrementChildren}
+                                >
+                                    <Text className="font-bold text-2xl ">+</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
                 </View>
-            </View>
-            <TableVoucher orderId ={item.orderId} token = {userToken} isReload={isReload} setIsReload={setIsReload}/>
+                <View className="px-4 mt-4 space-y-2">
+                    <Text className="text-xl text-gray-700 font-semibold">Vui lòng nhập mã ưu đãi của bạn</Text>
+                    <View className="w-full h-12 flex-row px-4 " style={{ borderWidth: 1, borderColor: 'lightgray' }}>
+                        <TextInput
+                            className="w-[80%]  bg-white"
+                            placeholder='Nhập mã ưu đãi của bạn'
+                            placeholderTextColor='gray'
+                            value={voucherCode}
+                            onChangeText={setVoucherCode}
+                        />
+                        <TouchableOpacity
+                            onPress={handleUseVoucher}
+                            className="w-[25%] items-center justify-center"
+                            style={{ backgroundColor: themeColors.bgColor(1) }}
+                        >
+                            <Text className="text-white font-bold">Sử dụng</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <TableVoucher orderId={item.orderId} token={userToken} isReload={isReload} setIsReload={setIsReload} />
+
+            </ScrollView>
             <View className="px-4 py-2 w-full h-[100px] absolute  justify-center  bg-white bottom-0 space-y-1 border-t-[0.5px] border-t-indigo-500">
                 <Text className="font-bold text-2xl text-red-500">{formatCurrency(item.price)} VNĐ </Text>
                 <View className="flex-row">
@@ -225,7 +228,6 @@ export default function OrderCustomization() {
                     </TouchableOpacity>
                 </View>
             </View>
-
         </View>
     )
 }

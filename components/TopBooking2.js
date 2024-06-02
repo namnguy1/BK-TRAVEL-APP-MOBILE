@@ -39,7 +39,7 @@ const TourItem = ({ tour, navigation }) => (
     <TouchableOpacity
         className="w-full bg-white mt-2 p-4 flex-row space-x-2"
         onPress={() => {
-            navigation.navigate('DetailTour2', { ...tour })
+            navigation.navigate('ScheduleDetail', { tourid: tour.tour_id })
         }}
     >
         <Image

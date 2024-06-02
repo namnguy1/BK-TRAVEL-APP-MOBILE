@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-const ipv4Address = '172.17.28.122'
+const ipv4Address = '172.17.27.98'
 export const BASE_URL = `http://${ipv4Address}:8080`;
 
 export const login = async (email, password) => {

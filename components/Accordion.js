@@ -72,7 +72,7 @@ export default function Accordion({
                     </View>
                 </View>
                 <View>
-                    <Text className="font-semibold text-xl">{name}</Text>
+                    <Text className="font-semibold text-xl"> {name.length > 15 ? `${name.substring(0, 15)}...` : name}</Text>
                 </View>
                 <View className="flex-row items-center space-x-1">
                     <Text>{date}</Text>

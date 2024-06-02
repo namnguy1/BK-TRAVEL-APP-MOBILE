@@ -24,6 +24,8 @@ import PaymentScreen from '../screens/PaymentScreen';
 import SuccessScreen from '../screens/SuccessScreen';
 import OrderUserScreen from '../screens/OrderUserScreen';
 import SearchingTourResult from '../screens/SearchingTourResult';
+import ScheduleDetail from '../screens/ScheduleDetail';
+import EndowScreen from '../screens/EndowScreen';
 export default function Navigation() {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const userToken = useSelector(selectUserToken);
@@ -69,9 +71,9 @@ export default function Navigation() {
             component={SearchingTour}
             options={{ headerShown: false }}
           />
-           <Stack.Screen name="SearchTourResult"
+          <Stack.Screen name="SearchTourResult"
             component={SearchingTourResult}
-        
+
           />
           <Stack.Screen
             name="OrderCustomization"
@@ -126,7 +128,17 @@ export default function Navigation() {
             component={SuccessScreen}
             options={{ headerShown: false }}
           />
-         
+          <Stack.Screen
+            name="ScheduleDetail"
+            component={ScheduleDetail}
+          // options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="EndowScreen"
+            component={EndowScreen}
+          // options={{ headerShown: false }}
+          />
+
         </Stack.Group>)}
 
 
