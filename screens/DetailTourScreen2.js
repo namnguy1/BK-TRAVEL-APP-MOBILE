@@ -271,6 +271,7 @@ export default function DetailTourScreen2() {
                     tour_id: parseInt(tourId),
                     order_id: curOrder,
                 };
+                console.log('body:', body);
                 const res = await axios.get(`${BASE_URL}/api/v1/groups/tours/${tourId}`, {
                     headers: {
                         Authorization: `${userToken}`,

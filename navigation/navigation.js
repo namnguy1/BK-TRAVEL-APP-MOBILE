@@ -26,6 +26,8 @@ import OrderUserScreen from '../screens/OrderUserScreen';
 import SearchingTourResult from '../screens/SearchingTourResult';
 import ScheduleDetail from '../screens/ScheduleDetail';
 import EndowScreen from '../screens/EndowScreen';
+import PaymentRefundScreen from '../screens/PaymentRefundScreen';
+import RefundTour from '../screens/RefundTour';
 export default function Navigation() {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const userToken = useSelector(selectUserToken);
@@ -121,6 +123,16 @@ export default function Navigation() {
           <Stack.Screen
             name="Payment"
             component={PaymentScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="PaymentRefund"
+            component={PaymentRefundScreen}
+            options={{ headerShown: false }}
+          />
+           <Stack.Screen
+            name="RefundTour"
+            component={RefundTour}
             options={{ headerShown: false }}
           />
           <Stack.Screen

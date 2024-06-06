@@ -28,10 +28,10 @@ export default function EndowScreen() {
         navigation.setOptions({
             headerTitle: '',
             headerLeft: () => (
-                <View className="flex-row items-center gap-2">
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                     <TouchableOpacity
                         style={{ backgroundColor: themeColors.bgColor(0) }}
-                        className="rounded-full p-2 shadow"
+                        className="rounded-full p-1 shadow"
                         onPress={() => navigation.goBack()}
                     >
                         <Entypo name="chevron-left" size={30} color="#737373" />

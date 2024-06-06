@@ -42,16 +42,27 @@ export default function SuccessScreen() {
       const searchParams = parseQueryString(queryString);
       console.log('search params: ', searchParams);
       const url = `${BASE_URL}/api/v1/users/payment/vnpay_ipn?${queryString}`;
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `${userToken}`,
-        },
-      });
+      const urlRefund = `${BASE_URL}/api/v1/users/payment/refund?${queryString}`;
+      let response;
+      if (queryString.includes('Thanh+toan')) {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: `${userToken}`,
+          },
+        });
+
+    
+      } else {
+        const response = await axios.get(urlRefund, {
+          headers: {
+            Authorization: `${userToken}`,
+          },
+        });
+      }
       if (response?.status === 200) {
         setResultPayment(response.data.RspCode);
       }
-      console.log('response: ' + response.data.RspCode);
-      console.log('resultPayment:' + resultPayment);
+
     } catch (error) {
       console.error(error);
     }
